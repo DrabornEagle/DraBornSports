@@ -74,7 +74,7 @@ export default function AnalysisScreen({ onSearch }) {
 
   return (
     <View style={styles.container}>
-      <ScreenHeader eyebrow="v0.2.1 · OLASILIK LABORATUVARI" title="Spor Analizi" rightActions={[{ icon: 'search', onPress: onSearch }]} />
+      <ScreenHeader eyebrow="v0.2.2 · OLASILIK LABORATUVARI" title="Spor Analizi" rightActions={[{ icon: 'search', onPress: onSearch }]} />
       <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         <View style={styles.pad}>
           <LinearGradient colors={gradients.hero} style={styles.hero}>
