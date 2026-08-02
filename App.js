@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Easing, SafeAreaView, StyleSheet, Text, View } from 'react-native';
+import { Animated, Easing, StyleSheet, Text, View } from 'react-native';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -28,34 +29,70 @@ function Intro({ onFinish }) {
   useEffect(() => {
     Animated.sequence([
       Animated.parallel([
-        Animated.spring(logoScale, { toValue: 1, speed: 14, bounciness: 10, useNativeDriver: true }),
-        Animated.timing(logoRotate, { toValue: 1, duration: 720, easing: Easing.out(Easing.cubic), useNativeDriver: true }),
+        Animated.spring(logoScale, {
+          toValue: 1,
+          speed: 14,
+          bounciness: 10,
+          useNativeDriver: true,
+        }),
+        Animated.timing(logoRotate, {
+          toValue: 1,
+          duration: 720,
+          easing: Easing.out(Easing.cubic),
+          useNativeDriver: true,
+        }),
       ]),
       Animated.parallel([
-        Animated.timing(titleOpacity, { toValue: 1, duration: 350, useNativeDriver: true }),
-        Animated.timing(barWidth, { toValue: 1, duration: 650, easing: Easing.inOut(Easing.cubic), useNativeDriver: false }),
+        Animated.timing(titleOpacity, {
+          toValue: 1,
+          duration: 350,
+          useNativeDriver: true,
+        }),
+        Animated.timing(barWidth, {
+          toValue: 1,
+          duration: 650,
+          easing: Easing.inOut(Easing.cubic),
+          useNativeDriver: false,
+        }),
       ]),
       Animated.delay(300),
-      Animated.timing(opacity, { toValue: 0, duration: 300, useNativeDriver: true }),
+      Animated.timing(opacity, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }),
     ]).start(onFinish);
   }, [barWidth, logoRotate, logoScale, onFinish, opacity, titleOpacity]);
 
-  const rotate = logoRotate.interpolate({ inputRange: [0, 1], outputRange: ['-18deg', '0deg'] });
-  const width = barWidth.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] });
+  const rotate = logoRotate.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['-18deg', '0deg'],
+  });
+  const width = barWidth.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%'],
+  });
 
   return (
     <Animated.View style={[styles.intro, { opacity }]}>
       <LinearGradient colors={gradients.hero} style={StyleSheet.absoluteFill} />
       <View style={styles.introOrbOne} />
       <View style={styles.introOrbTwo} />
-      <Animated.View style={[styles.introLogo, { transform: [{ scale: logoScale }, { rotate }] }]}>
+      <Animated.View
+        style={[
+          styles.introLogo,
+          { transform: [{ scale: logoScale }, { rotate }] },
+        ]}
+      >
         <Ionicons name="analytics" size={45} color={colors.black} />
       </Animated.View>
       <Animated.View style={{ opacity: titleOpacity, alignItems: 'center' }}>
         <Text style={styles.introTitle}>DraBornSports</Text>
-        <Text style={styles.introSub}>ANALİZ MOTORU · v0.2 DEMO</Text>
+        <Text style={styles.introSub}>ANALİZ MOTORU · v0.2.1 DEMO</Text>
       </Animated.View>
-      <View style={styles.introProgress}><Animated.View style={[styles.introProgressFill, { width }]} /></View>
+      <View style={styles.introProgress}>
+        <Animated.View style={[styles.introProgressFill, { width }]} />
+      </View>
     </Animated.View>
   );
 }
@@ -68,15 +105,30 @@ function AnimatedScreen({ screenKey, children }) {
     opacity.setValue(0);
     translateX.setValue(16);
     Animated.parallel([
-      Animated.timing(opacity, { toValue: 1, duration: 260, useNativeDriver: true }),
-      Animated.spring(translateX, { toValue: 0, speed: 20, bounciness: 3, useNativeDriver: true }),
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 260,
+        useNativeDriver: true,
+      }),
+      Animated.spring(translateX, {
+        toValue: 0,
+        speed: 20,
+        bounciness: 3,
+        useNativeDriver: true,
+      }),
     ]).start();
   }, [screenKey, opacity, translateX]);
 
-  return <Animated.View style={[styles.screen, { opacity, transform: [{ translateX }] }]}>{children}</Animated.View>;
+  return (
+    <Animated.View
+      style={[styles.screen, { opacity, transform: [{ translateX }] }]}
+    >
+      {children}
+    </Animated.View>
+  );
 }
 
-export default function App() {
+function AppContent() {
   const [introVisible, setIntroVisible] = useState(true);
   const [ageAccepted, setAgeAccepted] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
@@ -98,7 +150,9 @@ export default function App() {
       match.id === matchId ? { ...match, favorite: !match.favorite } : match
     )));
     setSelectedMatch((current) => (
-      current?.id === matchId ? { ...current, favorite: !current.favorite } : current
+      current?.id === matchId
+        ? { ...current, favorite: !current.favorite }
+        : current
     ));
   };
 
@@ -165,7 +219,7 @@ export default function App() {
   return (
     <View style={styles.app}>
       <StatusBar style="light" backgroundColor={colors.background} translucent={false} />
-      <SafeAreaView style={styles.safeArea}>
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
         <AnimatedScreen screenKey={activeTab}>{renderScreen()}</AnimatedScreen>
         <BottomNav
           activeTab={activeTab}
@@ -200,9 +254,20 @@ export default function App() {
         onToggleFavorite={toggleFavorite}
       />
 
-      <ComplianceGate visible={!introVisible && !ageAccepted} onAccept={() => setAgeAccepted(true)} />
+      <ComplianceGate
+        visible={!introVisible && !ageAccepted}
+        onAccept={() => setAgeAccepted(true)}
+      />
       {introVisible ? <Intro onFinish={() => setIntroVisible(false)} /> : null}
     </View>
+  );
+}
+
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <AppContent />
+    </SafeAreaProvider>
   );
 }
 
@@ -245,8 +310,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     marginBottom: 24,
   },
-  introTitle: { color: colors.text, fontSize: 32, fontWeight: '900', letterSpacing: -1.2 },
-  introSub: { color: colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 2, marginTop: 7 },
+  introTitle: {
+    color: colors.text,
+    fontSize: 32,
+    fontWeight: '900',
+    letterSpacing: -1.2,
+  },
+  introSub: {
+    color: colors.textMuted,
+    fontSize: 10,
+    fontWeight: '900',
+    letterSpacing: 2,
+    marginTop: 7,
+  },
   introProgress: {
     width: 155,
     height: 5,
@@ -255,5 +331,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: 26,
   },
-  introProgressFill: { height: '100%', backgroundColor: colors.primary, borderRadius: 3 },
+  introProgressFill: {
+    height: '100%',
+    backgroundColor: colors.primary,
+    borderRadius: 3,
+  },
 });
