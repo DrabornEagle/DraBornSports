@@ -88,7 +88,7 @@ function Intro({ onFinish }) {
       </Animated.View>
       <Animated.View style={{ opacity: titleOpacity, alignItems: 'center' }}>
         <Text style={styles.introTitle}>DraBornSports</Text>
-        <Text style={styles.introSub}>ANALİZ MOTORU · v0.2.1 DEMO</Text>
+        <Text style={styles.introSub}>ANALİZ MOTORU · v0.2.2 DEMO</Text>
       </Animated.View>
       <View style={styles.introProgress}>
         <Animated.View style={[styles.introProgressFill, { width }]} />
