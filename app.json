@@ -2,7 +2,7 @@
   "expo": {
     "name": "DraBornSports",
     "slug": "draborn-sports",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
     "android": {
@@ -20,7 +20,7 @@
       "bundler": "metro"
     },
     "extra": {
-      "appVersionLabel": "v0.2.2 DEMO",
+      "appVersionLabel": "v0.2.3 DEMO",
       "expoGoExpectedVersion": "57.0.2",
       "dataMode": "LOCAL_DEMO",
       "demoDatasetVersion": "2026.08.02-r2",
