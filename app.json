@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "DraBornSports",
+    "slug": "draborn-sports",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "android": {
+      "package": "com.draborneagle.drabornsports",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#07111F"
+      }
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.draborneagle.drabornsports"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "extra": {
+      "appVersionLabel": "v0.1 DEMO"
+    }
+  }
+}
