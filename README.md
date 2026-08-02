@@ -1,58 +1,104 @@
-# DraBornSports v0.1 Demo
+# DraBornSports v0.2 Demo
 
-DraBornSports; futbol, basketbol, voleybol, tenis ve Formula 1 içeriklerini tek modern mobil deneyimde toplayan spor uygulaması demosudur.
+DraBornSports; spor karşılaşmalarını, ligleri ve haberleri modern mobil arayüzde sunan; v0.2 ile birlikte yerel demo verilerinden olasılık raporu üreten Expo uygulamasıdır.
 
-## v0.1 kapsamı
+## v0.2 yenilikleri
 
-- Animasyonlu açılış ve modern koyu spor teması
-- Çoklu spor filtreleri
-- Canlı skor ve maç kartları
-- Fikstür, sonuç, canlı, yaklaşan ve favori filtreleri
-- Maç merkezi: özet, momentum, istatistik ve olay akışı
-- Lig ve puan durumu ekranları
-- Spor haberleri ve haber detay ekranı
-- Uygulama içi arama
-- Bildirim merkezi demosu
-- Favori maç/takım deneyimi
-- Profil ve bildirim tercihleri
-- Tamamen yerel demo verileri; Supabase veya başka veritabanı yok
+- Expo SDK 57 ve Expo Go 57.0.2 uyumluluğu
+- Android uygulama sürümü `0.2.0`
+- Android `versionCode: 1`
+- 18+ yaş ve sorumlu analiz bilgilendirmesi
+- Kupon Analiz ekranı
+- Tarih ve maç sayısı seçimi
+- Teorik tutar ve teorik getiri hesabı
+- Rastgele kupon ve en güçlü seçim modu
+- Form, xG, saha, hava, eksikler, dinlenme ve geçmiş eşleşme analizi
+- Model olasılığı, veri kalitesi ve risk seviyesi
+- Yalnızca manuel çalıştırılan Release APK ve Release AAB workflowları
+- Yerel demo verileri; gerçek bahis işlemi, ödeme veya bahis sitesi yönlendirmesi yok
 
-## Teknoloji
+## Önemli açıklama
 
-- Expo SDK 54
-- React Native 0.81.5
-- React 19.1
-- Expo Go uyumlu paketler
-- `Animated`, `expo-linear-gradient`, `expo-haptics`, `@expo/vector-icons`
+DraBornSports bahis oynatmaz, para yatırma/çekme işlemi yapmaz ve üçüncü taraf bahis sitesine yönlendirme içermez. Olasılık, oran ve teorik getiri değerleri eğitim amaçlı demo simülasyonudur. Hiçbir sonuç veya kazanç garanti edilmez.
 
-## Android / Termux kurulumu
+## Termux — v0.1’i yedekle, v0.2’ye geç ve GitHub ile eşitle
+
+Repo içindeki otomatik yedekleme/eşitleme betiğini çalıştırın:
+
+```bash
+cd "$HOME/projects/DraBornSports"
+git fetch --all --prune
+git checkout main
+git reset --hard origin/main
+chmod +x scripts/termux_sync_v0.2.sh
+bash scripts/termux_sync_v0.2.sh
+npx expo start --clear --tunnel
+```
+
+Betik, güncellemeden önce lokal projenin `.tar.gz` arşivini ve ayrıca Git dalı/etiketi yedeğini oluşturur; ardından lokali `origin/main` ile birebir eşitler.
+
+## İlk kurulum
 
 ```bash
 pkg update -y
 pkg install -y git nodejs-lts
+
 mkdir -p "$HOME/projects"
 cd "$HOME/projects"
 rm -rf DraBornSports
+
 git clone https://github.com/DrabornEagle/DraBornSports.git
 cd DraBornSports
+
 npm install
-npx expo start --tunnel
-```
-
-Expo Go uygulamasında terminalde oluşan QR kodunu okutun.
-
-Aynı Wi-Fi ağı kullanılıyorsa daha hızlı başlatmak için:
-
-```bash
-npx expo start --lan
-```
-
-Önbellek sorunu yaşanırsa:
-
-```bash
+npx expo install --check
+npx expo-doctor
 npx expo start --clear --tunnel
 ```
 
-## Demo notu
+## v0.1’e geri dönme
 
-Bu sürümde skorlar, fikstürler, lig tabloları, haberler ve bildirimler `src/data/demoData.js` dosyasından gelir. Gerçek veri ve kullanıcı sistemi, tasarım onayından sonra Supabase ve uygun spor veri sağlayıcısıyla entegre edilecektir.
+```bash
+cd "$HOME/projects/DraBornSports"
+git fetch --all --prune
+git checkout main
+git reset --hard origin/main
+chmod +x scripts/termux_rollback_v0.1.sh
+bash scripts/termux_rollback_v0.1.sh
+```
+
+Geri alma betiği `rollback-v0.1` adlı ayrı bir dal açar; `main` dalını bozmaz. v0.1, Expo SDK 54 tabanlı olduğu için SDK 54 uyumlu Expo Go gerektirir.
+
+Tekrar v0.2’ye dönmek için:
+
+```bash
+cd "$HOME/projects/DraBornSports"
+git fetch --all --prune
+git checkout main
+git reset --hard origin/main
+git clean -fd
+rm -rf node_modules package-lock.json .expo
+npm install
+npx expo start --clear --tunnel
+```
+
+## Release workflowları
+
+Workflowlar yalnızca GitHub Actions ekranından manuel çalıştırılır:
+
+- `DraBornSports Release APK`
+- `DraBornSports Release AAB`
+
+Build almadan önce repository secrets alanına şunlar eklenmelidir:
+
+- `EXPO_TOKEN`
+- `DRA_BORN_SPORTS_KEYSTORE_BASE64`
+- `DRA_BORN_SPORTS_KEYSTORE_PASSWORD`
+- `DRA_BORN_SPORTS_KEY_ALIAS`
+- `DRA_BORN_SPORTS_KEY_PASSWORD`
+
+Şimdilik hiçbir APK veya AAB otomatik oluşturulmaz.
+
+## Supabase durumu
+
+v0.2 Expo testi yerel demo verileriyle çalışır. DraBornSports adına başlı bir Supabase projesi bulunmadığı için canlı veritabanına geçiş yapılmamıştır. Hazırlanan güvenli şema taslağı `supabase/migrations` klasöründedir.

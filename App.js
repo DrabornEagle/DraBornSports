@@ -5,10 +5,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import HomeScreen from './src/screens/HomeScreen';
 import MatchesScreen from './src/screens/MatchesScreen';
+import AnalysisScreen from './src/screens/AnalysisScreen';
 import LeaguesScreen from './src/screens/LeaguesScreen';
 import NewsScreen from './src/screens/NewsScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
 import BottomNav from './src/components/BottomNav';
+import ComplianceGate from './src/components/ComplianceGate';
 import MatchDetailsModal from './src/modals/MatchDetailsModal';
 import NewsDetailsModal from './src/modals/NewsDetailsModal';
 import NotificationsModal from './src/modals/NotificationsModal';
@@ -47,11 +49,11 @@ function Intro({ onFinish }) {
       <View style={styles.introOrbOne} />
       <View style={styles.introOrbTwo} />
       <Animated.View style={[styles.introLogo, { transform: [{ scale: logoScale }, { rotate }] }]}>
-        <Ionicons name="flash" size={46} color={colors.black} />
+        <Ionicons name="analytics" size={45} color={colors.black} />
       </Animated.View>
       <Animated.View style={{ opacity: titleOpacity, alignItems: 'center' }}>
         <Text style={styles.introTitle}>DraBornSports</Text>
-        <Text style={styles.introSub}>SPORUN NABZI · v0.1 DEMO</Text>
+        <Text style={styles.introSub}>ANALİZ MOTORU · v0.2 DEMO</Text>
       </Animated.View>
       <View style={styles.introProgress}><Animated.View style={[styles.introProgressFill, { width }]} /></View>
     </Animated.View>
@@ -76,6 +78,7 @@ function AnimatedScreen({ screenKey, children }) {
 
 export default function App() {
   const [introVisible, setIntroVisible] = useState(true);
+  const [ageAccepted, setAgeAccepted] = useState(false);
   const [activeTab, setActiveTab] = useState('home');
   const [selectedSport, setSelectedSport] = useState('all');
   const [appMatches, setAppMatches] = useState(initialMatches);
@@ -85,11 +88,18 @@ export default function App() {
   const [notificationsVisible, setNotificationsVisible] = useState(false);
   const [matchesInitialStatus, setMatchesInitialStatus] = useState('all');
 
-  const favoriteCount = useMemo(() => appMatches.filter((match) => match.favorite).length, [appMatches]);
+  const favoriteCount = useMemo(
+    () => appMatches.filter((match) => match.favorite).length,
+    [appMatches],
+  );
 
   const toggleFavorite = (matchId) => {
-    setAppMatches((current) => current.map((match) => match.id === matchId ? { ...match, favorite: !match.favorite } : match));
-    setSelectedMatch((current) => current?.id === matchId ? { ...current, favorite: !current.favorite } : current);
+    setAppMatches((current) => current.map((match) => (
+      match.id === matchId ? { ...match, favorite: !match.favorite } : match
+    )));
+    setSelectedMatch((current) => (
+      current?.id === matchId ? { ...current, favorite: !current.favorite } : current
+    ));
   };
 
   const goToMatches = (status = 'all') => {
@@ -100,16 +110,55 @@ export default function App() {
   const renderScreen = () => {
     switch (activeTab) {
       case 'matches':
-        return <MatchesScreen selectedSport={selectedSport} onSportChange={setSelectedSport} appMatches={appMatches} onMatchPress={setSelectedMatch} onToggleFavorite={toggleFavorite} initialStatus={matchesInitialStatus} onSearch={() => setSearchVisible(true)} />;
+        return (
+          <MatchesScreen
+            selectedSport={selectedSport}
+            onSportChange={setSelectedSport}
+            appMatches={appMatches}
+            onMatchPress={setSelectedMatch}
+            onToggleFavorite={toggleFavorite}
+            initialStatus={matchesInitialStatus}
+            onSearch={() => setSearchVisible(true)}
+          />
+        );
+      case 'analysis':
+        return <AnalysisScreen onSearch={() => setSearchVisible(true)} />;
       case 'leagues':
         return <LeaguesScreen onSearch={() => setSearchVisible(true)} />;
       case 'news':
-        return <NewsScreen selectedSport={selectedSport} onSportChange={setSelectedSport} onNewsPress={setSelectedArticle} onSearch={() => setSearchVisible(true)} />;
+        return (
+          <NewsScreen
+            selectedSport={selectedSport}
+            onSportChange={setSelectedSport}
+            onNewsPress={setSelectedArticle}
+            onSearch={() => setSearchVisible(true)}
+          />
+        );
       case 'profile':
-        return <ProfileScreen favoriteCount={favoriteCount} onNotifications={() => setNotificationsVisible(true)} onGoFavorites={() => goToMatches('favorites')} />;
+        return (
+          <ProfileScreen
+            favoriteCount={favoriteCount}
+            onNotifications={() => setNotificationsVisible(true)}
+            onGoFavorites={() => goToMatches('favorites')}
+          />
+        );
       case 'home':
       default:
-        return <HomeScreen selectedSport={selectedSport} onSportChange={setSelectedSport} appMatches={appMatches} onMatchPress={setSelectedMatch} onToggleFavorite={toggleFavorite} onSearch={() => setSearchVisible(true)} onNotifications={() => setNotificationsVisible(true)} onGoMatches={() => goToMatches('live')} onGoLeagues={() => setActiveTab('leagues')} onGoNews={() => setActiveTab('news')} onFavoriteFilter={() => goToMatches('favorites')} />;
+        return (
+          <HomeScreen
+            selectedSport={selectedSport}
+            onSportChange={setSelectedSport}
+            appMatches={appMatches}
+            onMatchPress={setSelectedMatch}
+            onToggleFavorite={toggleFavorite}
+            onSearch={() => setSearchVisible(true)}
+            onNotifications={() => setNotificationsVisible(true)}
+            onGoMatches={() => goToMatches('live')}
+            onGoAnalysis={() => setActiveTab('analysis')}
+            onGoLeagues={() => setActiveTab('leagues')}
+            onGoNews={() => setActiveTab('news')}
+          />
+        );
     }
   };
 
@@ -118,14 +167,40 @@ export default function App() {
       <StatusBar style="light" backgroundColor={colors.background} translucent={false} />
       <SafeAreaView style={styles.safeArea}>
         <AnimatedScreen screenKey={activeTab}>{renderScreen()}</AnimatedScreen>
-        <BottomNav activeTab={activeTab} onChange={(tab) => { if (tab === 'matches') setMatchesInitialStatus('all'); setActiveTab(tab); }} />
+        <BottomNav
+          activeTab={activeTab}
+          onChange={(tab) => {
+            if (tab === 'matches') setMatchesInitialStatus('all');
+            setActiveTab(tab);
+          }}
+        />
       </SafeAreaView>
 
-      <MatchDetailsModal match={selectedMatch} visible={Boolean(selectedMatch)} onClose={() => setSelectedMatch(null)} onToggleFavorite={toggleFavorite} />
-      <NewsDetailsModal article={selectedArticle} visible={Boolean(selectedArticle)} onClose={() => setSelectedArticle(null)} />
-      <NotificationsModal visible={notificationsVisible} onClose={() => setNotificationsVisible(false)} />
-      <SearchModal visible={searchVisible} onClose={() => setSearchVisible(false)} appMatches={appMatches} onMatchPress={setSelectedMatch} onNewsPress={setSelectedArticle} onToggleFavorite={toggleFavorite} />
+      <MatchDetailsModal
+        match={selectedMatch}
+        visible={Boolean(selectedMatch)}
+        onClose={() => setSelectedMatch(null)}
+        onToggleFavorite={toggleFavorite}
+      />
+      <NewsDetailsModal
+        article={selectedArticle}
+        visible={Boolean(selectedArticle)}
+        onClose={() => setSelectedArticle(null)}
+      />
+      <NotificationsModal
+        visible={notificationsVisible}
+        onClose={() => setNotificationsVisible(false)}
+      />
+      <SearchModal
+        visible={searchVisible}
+        onClose={() => setSearchVisible(false)}
+        appMatches={appMatches}
+        onMatchPress={setSelectedMatch}
+        onNewsPress={setSelectedArticle}
+        onToggleFavorite={toggleFavorite}
+      />
 
+      <ComplianceGate visible={!introVisible && !ageAccepted} onAccept={() => setAgeAccepted(true)} />
       {introVisible ? <Intro onFinish={() => setIntroVisible(false)} /> : null}
     </View>
   );
@@ -135,12 +210,50 @@ const styles = StyleSheet.create({
   app: { flex: 1, backgroundColor: colors.background },
   safeArea: { flex: 1, backgroundColor: colors.background },
   screen: { flex: 1 },
-  intro: { ...StyleSheet.absoluteFillObject, zIndex: 999, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background, overflow: 'hidden' },
-  introOrbOne: { position: 'absolute', width: 280, height: 280, borderRadius: 140, backgroundColor: 'rgba(50,230,161,0.09)', right: -110, top: 70 },
-  introOrbTwo: { position: 'absolute', width: 260, height: 260, borderRadius: 130, backgroundColor: 'rgba(109,123,255,0.11)', left: -120, bottom: 50 },
-  introLogo: { width: 96, height: 96, borderRadius: 33, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.primary, marginBottom: 24 },
+  intro: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 999,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.background,
+    overflow: 'hidden',
+  },
+  introOrbOne: {
+    position: 'absolute',
+    width: 280,
+    height: 280,
+    borderRadius: 140,
+    backgroundColor: 'rgba(50,230,161,0.09)',
+    right: -110,
+    top: 70,
+  },
+  introOrbTwo: {
+    position: 'absolute',
+    width: 260,
+    height: 260,
+    borderRadius: 130,
+    backgroundColor: 'rgba(109,123,255,0.11)',
+    left: -120,
+    bottom: 50,
+  },
+  introLogo: {
+    width: 96,
+    height: 96,
+    borderRadius: 33,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: colors.primary,
+    marginBottom: 24,
+  },
   introTitle: { color: colors.text, fontSize: 32, fontWeight: '900', letterSpacing: -1.2 },
   introSub: { color: colors.textMuted, fontSize: 10, fontWeight: '900', letterSpacing: 2, marginTop: 7 },
-  introProgress: { width: 155, height: 5, borderRadius: 3, backgroundColor: 'rgba(255,255,255,0.08)', overflow: 'hidden', marginTop: 26 },
+  introProgress: {
+    width: 155,
+    height: 5,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255,255,255,0.08)',
+    overflow: 'hidden',
+    marginTop: 26,
+  },
   introProgressFill: { height: '100%', backgroundColor: colors.primary, borderRadius: 3 },
 });

@@ -7,27 +7,44 @@ import { colors, radii } from '../theme';
 const tabs = [
   { id: 'home', label: 'Ana Sayfa', icon: 'home' },
   { id: 'matches', label: 'Maçlar', icon: 'calendar' },
+  { id: 'analysis', label: 'Analiz', icon: 'analytics', featured: true },
   { id: 'leagues', label: 'Ligler', icon: 'trophy' },
-  { id: 'news', label: 'Haberler', icon: 'newspaper' },
   { id: 'profile', label: 'Profil', icon: 'person' },
 ];
 
 function TabItem({ tab, active, onPress }) {
   const progress = useRef(new Animated.Value(active ? 1 : 0)).current;
+
   useEffect(() => {
-    Animated.spring(progress, { toValue: active ? 1 : 0, useNativeDriver: false, speed: 22, bounciness: 6 }).start();
+    Animated.spring(progress, {
+      toValue: active ? 1 : 0,
+      useNativeDriver: false,
+      speed: 22,
+      bounciness: 6,
+    }).start();
   }, [active, progress]);
 
-  const width = progress.interpolate({ inputRange: [0, 1], outputRange: [0, 40] });
-  const opacity = progress.interpolate({ inputRange: [0, 1], outputRange: [0, 1] });
+  const indicatorWidth = progress.interpolate({ inputRange: [0, 1], outputRange: [0, 40] });
 
   return (
-    <AnimatedPressable onPress={onPress} style={styles.tab} scaleTo={0.9}>
-      <View style={[styles.iconWrap, active && styles.activeIconWrap]}>
-        <Ionicons name={active ? tab.icon : `${tab.icon}-outline`} size={21} color={active ? colors.black : colors.textMuted} />
+    <AnimatedPressable
+      onPress={onPress}
+      style={[styles.tab, tab.featured && styles.featuredTab]}
+      scaleTo={0.9}
+    >
+      <View style={[
+        styles.iconWrap,
+        tab.featured && styles.featuredIcon,
+        active && styles.activeIconWrap,
+      ]}>
+        <Ionicons
+          name={active ? tab.icon : `${tab.icon}-outline`}
+          size={tab.featured ? 23 : 21}
+          color={active || tab.featured ? colors.black : colors.textMuted}
+        />
       </View>
-      <Animated.Text style={[styles.label, active && styles.activeLabel, { opacity }]} numberOfLines={1}>{tab.label}</Animated.Text>
-      <Animated.View style={[styles.indicator, { width }]} />
+      <Text style={[styles.label, (active || tab.featured) && styles.activeLabel]}>{tab.label}</Text>
+      <Animated.View style={[styles.indicator, { width: indicatorWidth }]} />
     </AnimatedPressable>
   );
 }
@@ -35,17 +52,44 @@ function TabItem({ tab, active, onPress }) {
 export default function BottomNav({ activeTab, onChange }) {
   return (
     <View style={styles.container}>
-      {tabs.map((tab) => <TabItem key={tab.id} tab={tab} active={activeTab === tab.id} onPress={() => onChange(tab.id)} />)}
+      {tabs.map((tab) => (
+        <TabItem key={tab.id} tab={tab} active={activeTab === tab.id} onPress={() => onChange(tab.id)} />
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-around', backgroundColor: '#091626', borderTopWidth: 1, borderTopColor: colors.border, paddingTop: 8, paddingBottom: 10, paddingHorizontal: 4 },
-  tab: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 54, position: 'relative' },
-  iconWrap: { width: 36, height: 32, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
+  container: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'space-around',
+    backgroundColor: '#091626',
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingTop: 7,
+    paddingBottom: 9,
+    paddingHorizontal: 3,
+  },
+  tab: { flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 55, position: 'relative' },
+  featuredTab: { marginTop: -18 },
+  iconWrap: { width: 37, height: 33, borderRadius: 13, alignItems: 'center', justifyContent: 'center' },
+  featuredIcon: {
+    width: 52,
+    height: 52,
+    borderRadius: 19,
+    backgroundColor: colors.primary,
+    borderWidth: 5,
+    borderColor: '#091626',
+  },
   activeIconWrap: { backgroundColor: colors.primary },
-  label: { color: colors.textMuted, fontSize: 9, fontWeight: '800', marginTop: 2, maxWidth: 62 },
+  label: { color: colors.textMuted, fontSize: 9, fontWeight: '800', marginTop: 3 },
   activeLabel: { color: colors.primary },
-  indicator: { position: 'absolute', bottom: -7, height: 3, borderRadius: radii.pill, backgroundColor: colors.primary },
+  indicator: {
+    position: 'absolute',
+    bottom: -6,
+    height: 3,
+    borderRadius: radii.pill,
+    backgroundColor: colors.primary,
+  },
 });

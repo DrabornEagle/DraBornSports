@@ -1,0 +1,75 @@
+name: DraBornSports Release AAB
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-release-aab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Validate Expo project
+        run: |
+          npx expo install --check
+          npx expo-doctor
+
+      - name: Validate Android signing secrets
+        shell: bash
+        run: |
+          test -n "${{ secrets.DRA_BORN_SPORTS_KEYSTORE_BASE64 }}"
+          test -n "${{ secrets.DRA_BORN_SPORTS_KEYSTORE_PASSWORD }}"
+          test -n "${{ secrets.DRA_BORN_SPORTS_KEY_ALIAS }}"
+          test -n "${{ secrets.DRA_BORN_SPORTS_KEY_PASSWORD }}"
+          test -n "${{ secrets.EXPO_TOKEN }}"
+
+      - name: Prepare local Android credentials
+        shell: bash
+        run: |
+          mkdir -p credentials/android
+          echo "${{ secrets.DRA_BORN_SPORTS_KEYSTORE_BASE64 }}" | base64 --decode > credentials/android/drabornsports-upload.jks
+          cat > credentials.json <<EOF
+          {
+            "android": {
+              "keystore": {
+                "keystorePath": "credentials/android/drabornsports-upload.jks",
+                "keystorePassword": "${{ secrets.DRA_BORN_SPORTS_KEYSTORE_PASSWORD }}",
+                "keyAlias": "${{ secrets.DRA_BORN_SPORTS_KEY_ALIAS }}",
+                "keyPassword": "${{ secrets.DRA_BORN_SPORTS_KEY_PASSWORD }}"
+              }
+            }
+          }
+          EOF
+
+      - name: Build signed release AAB
+        run: |
+          npx eas-cli@latest build \
+            --platform android \
+            --profile release-aab \
+            --local \
+            --non-interactive \
+            --output DraBornSports-v0.2-release.aab
+
+      - name: Upload AAB artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: DraBornSports-v0.2-release-aab
+          path: DraBornSports-v0.2-release.aab
+          if-no-files-found: error
+          retention-days: 14

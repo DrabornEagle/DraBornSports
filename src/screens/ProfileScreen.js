@@ -38,7 +38,7 @@ function SettingRow({ icon, color, title, subtitle, onPress, right, delay = 0 })
 export default function ProfileScreen({ favoriteCount, onNotifications, onGoFavorites }) {
   const [goalAlerts, setGoalAlerts] = useState(true);
   const [matchAlerts, setMatchAlerts] = useState(true);
-  const [newsAlerts, setNewsAlerts] = useState(false);
+  const [analysisAlerts, setAnalysisAlerts] = useState(false);
   const [dataSaver, setDataSaver] = useState(false);
 
   return (
@@ -53,7 +53,7 @@ export default function ProfileScreen({ favoriteCount, onNotifications, onGoFavo
                 <View style={styles.profileInfo}>
                   <Text style={styles.profileName}>DrabornEagle</Text>
                   <Text style={styles.profileHandle}>@draborneagle · Spor Tutkunu</Text>
-                  <View style={styles.levelPill}><Ionicons name="flash" size={12} color={colors.black} /><Text style={styles.levelText}>SEVİYE 8</Text></View>
+                  <View style={styles.levelPill}><Ionicons name="analytics" size={12} color={colors.black} /><Text style={styles.levelText}>ANALİZ SEVİYESİ 8</Text></View>
                 </View>
                 <AnimatedPressable style={styles.editButton}><Ionicons name="create-outline" size={19} color={colors.text} /></AnimatedPressable>
               </View>
@@ -62,7 +62,7 @@ export default function ProfileScreen({ favoriteCount, onNotifications, onGoFavo
                 <View style={styles.statDivider} />
                 <Stat value="27" label="Takip" />
                 <View style={styles.statDivider} />
-                <Stat value="1.240" label="Puan" />
+                <Stat value="12" label="Demo Rapor" />
               </View>
               <View style={styles.progressHeader}><Text style={styles.progressLabel}>Spor Takip Seviyesi</Text><Text style={styles.progressValue}>72%</Text></View>
               <View style={styles.progressTrack}><View style={styles.progressFill} /></View>
@@ -70,6 +70,16 @@ export default function ProfileScreen({ favoriteCount, onNotifications, onGoFavo
           </FadeInView>
 
           <FadeInView delay={110}>
+            <View style={styles.responsibleCard}>
+              <View style={styles.responsibleIcon}><Ionicons name="shield-checkmark" size={22} color={colors.primary} /></View>
+              <View style={{ flex: 1 }}>
+                <Text style={styles.responsibleTitle}>Sorumlu Analiz Modu</Text>
+                <Text style={styles.responsibleText}>18+ · Eğitim amaçlı demo · Kesin sonuç veya kazanç garantisi yok · Bahis işlemi ve bahis sitesi bağlantısı yok.</Text>
+              </View>
+            </View>
+          </FadeInView>
+
+          <FadeInView delay={140}>
             <View style={styles.favoriteHeader}>
               <View><Text style={styles.sectionTitle}>Favori Takımlar</Text><Text style={styles.sectionSub}>Bildirimlerini kişiselleştir</Text></View>
               <AnimatedPressable onPress={onGoFavorites} style={styles.manageButton}><Text style={styles.manageText}>Yönet</Text></AnimatedPressable>
@@ -87,28 +97,28 @@ export default function ProfileScreen({ favoriteCount, onNotifications, onGoFavo
 
           <Text style={styles.groupTitle}>BİLDİRİMLER</Text>
           <View style={styles.settingsCard}>
-            <SettingRow icon="football" color={colors.live} title="Gol Bildirimleri" subtitle="Favori takımlarındaki goller" delay={150} right={<Switch value={goalAlerts} onValueChange={setGoalAlerts} trackColor={{ false: colors.surfaceSoft, true: colors.primaryDark }} thumbColor={goalAlerts ? colors.primary : '#8FA0B5'} />} />
-            <SettingRow icon="alarm" color={colors.info} title="Maç Hatırlatmaları" subtitle="Maçtan 30 dakika önce" delay={180} right={<Switch value={matchAlerts} onValueChange={setMatchAlerts} trackColor={{ false: colors.surfaceSoft, true: colors.primaryDark }} thumbColor={matchAlerts ? colors.primary : '#8FA0B5'} />} />
-            <SettingRow icon="newspaper" color={colors.purple} title="Haber Bildirimleri" subtitle="Önemli ve son dakika gelişmeleri" delay={210} right={<Switch value={newsAlerts} onValueChange={setNewsAlerts} trackColor={{ false: colors.surfaceSoft, true: colors.primaryDark }} thumbColor={newsAlerts ? colors.primary : '#8FA0B5'} />} />
+            <SettingRow icon="football" color={colors.live} title="Gol Bildirimleri" subtitle="Favori takımlarındaki goller" delay={170} right={<Switch value={goalAlerts} onValueChange={setGoalAlerts} trackColor={{ false: colors.surfaceSoft, true: colors.primaryDark }} thumbColor={goalAlerts ? colors.primary : '#8FA0B5'} />} />
+            <SettingRow icon="alarm" color={colors.info} title="Maç Hatırlatmaları" subtitle="Maçtan 30 dakika önce" delay={200} right={<Switch value={matchAlerts} onValueChange={setMatchAlerts} trackColor={{ false: colors.surfaceSoft, true: colors.primaryDark }} thumbColor={matchAlerts ? colors.primary : '#8FA0B5'} />} />
+            <SettingRow icon="analytics" color={colors.purple} title="Analiz Güncellemeleri" subtitle="Demo veri kalitesi ve model değişiklikleri" delay={230} right={<Switch value={analysisAlerts} onValueChange={setAnalysisAlerts} trackColor={{ false: colors.surfaceSoft, true: colors.primaryDark }} thumbColor={analysisAlerts ? colors.primary : '#8FA0B5'} />} />
           </View>
 
           <Text style={styles.groupTitle}>UYGULAMA</Text>
           <View style={styles.settingsCard}>
-            <SettingRow icon="notifications" color={colors.accent} title="Bildirim Merkezi" subtitle="3 okunmamış bildirim" onPress={onNotifications} delay={240} />
-            <SettingRow icon="color-palette" color={colors.secondary} title="Görünüm" subtitle="Koyu spor teması" delay={270} />
-            <SettingRow icon="speedometer" color={colors.primary} title="Veri Tasarrufu" subtitle="Düşük bağlantıda daha az veri kullan" delay={300} right={<Switch value={dataSaver} onValueChange={setDataSaver} trackColor={{ false: colors.surfaceSoft, true: colors.primaryDark }} thumbColor={dataSaver ? colors.primary : '#8FA0B5'} />} />
-            <SettingRow icon="language" color={colors.info} title="Dil" subtitle="Türkçe" delay={330} />
+            <SettingRow icon="notifications" color={colors.accent} title="Bildirim Merkezi" subtitle="3 okunmamış bildirim" onPress={onNotifications} delay={260} />
+            <SettingRow icon="color-palette" color={colors.secondary} title="Görünüm" subtitle="Koyu spor teması" delay={290} />
+            <SettingRow icon="speedometer" color={colors.primary} title="Veri Tasarrufu" subtitle="Düşük bağlantıda daha az veri kullan" delay={320} right={<Switch value={dataSaver} onValueChange={setDataSaver} trackColor={{ false: colors.surfaceSoft, true: colors.primaryDark }} thumbColor={dataSaver ? colors.primary : '#8FA0B5'} />} />
+            <SettingRow icon="language" color={colors.info} title="Dil" subtitle="Türkçe" delay={350} />
           </View>
 
-          <Text style={styles.groupTitle}>DESTEK</Text>
+          <Text style={styles.groupTitle}>YASAL & DESTEK</Text>
           <View style={styles.settingsCard}>
-            <SettingRow icon="help-circle" color={colors.info} title="Yardım Merkezi" subtitle="Sık sorulan sorular" delay={360} />
-            <SettingRow icon="chatbubble-ellipses" color={colors.primary} title="Geri Bildirim Gönder" subtitle="DraBornSports'u birlikte geliştirelim" delay={390} />
-            <SettingRow icon="shield-checkmark" color={colors.accent} title="Gizlilik ve Koşullar" subtitle="Demo sürüm bilgileri" delay={420} />
+            <SettingRow icon="shield-checkmark" color={colors.primary} title="Sorumlu Analiz İlkeleri" subtitle="Risk ve belirsizlik açıklamaları" delay={380} />
+            <SettingRow icon="lock-closed" color={colors.info} title="Gizlilik Politikası" subtitle="v0.2 yerel demo veri kullanımı" delay={410} />
+            <SettingRow icon="help-circle" color={colors.accent} title="Yardım Merkezi" subtitle="Sık sorulan sorular" delay={440} />
           </View>
 
           <View style={styles.versionCard}>
-            <View><Text style={styles.versionBrand}>DraBornSports</Text><Text style={styles.versionText}>v0.1 · Yerel demo verileri · Supabase yok</Text></View>
+            <View><Text style={styles.versionBrand}>DraBornSports</Text><Text style={styles.versionText}>v0.2.0 · Expo SDK 57 · Yerel demo · versionCode 1</Text></View>
             <View style={styles.demoPill}><Text style={styles.demoText}>DEMO</Text></View>
           </View>
         </View>
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
   profileName: { color: colors.text, fontSize: 19, fontWeight: '900' },
   profileHandle: { color: colors.textMuted, fontSize: 10, marginTop: 3 },
   levelPill: { alignSelf: 'flex-start', flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: 8, backgroundColor: colors.primary, paddingHorizontal: 8, paddingVertical: 4, borderRadius: radii.pill },
-  levelText: { color: colors.black, fontSize: 8, fontWeight: '900', letterSpacing: 0.7 },
+  levelText: { color: colors.black, fontSize: 8, fontWeight: '900', letterSpacing: 0.5 },
   editButton: { width: 39, height: 39, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.08)' },
   statsRow: { flexDirection: 'row', alignItems: 'center', marginTop: 20, paddingVertical: 14, borderTopWidth: 1, borderBottomWidth: 1, borderColor: colors.border },
   stat: { flex: 1, alignItems: 'center' },
@@ -141,6 +151,10 @@ const styles = StyleSheet.create({
   progressValue: { color: colors.primary, fontSize: 9, fontWeight: '900' },
   progressTrack: { height: 7, borderRadius: radii.pill, backgroundColor: 'rgba(255,255,255,0.08)', marginTop: 7, overflow: 'hidden' },
   progressFill: { width: '72%', height: '100%', borderRadius: radii.pill, backgroundColor: colors.primary },
+  responsibleCard: { marginTop: 14, flexDirection: 'row', gap: 11, backgroundColor: 'rgba(50,230,161,0.06)', borderWidth: 1, borderColor: 'rgba(50,230,161,0.22)', borderRadius: radii.large, padding: 14 },
+  responsibleIcon: { width: 42, height: 42, borderRadius: 15, backgroundColor: 'rgba(50,230,161,0.11)', alignItems: 'center', justifyContent: 'center' },
+  responsibleTitle: { color: colors.text, fontSize: 13, fontWeight: '900' },
+  responsibleText: { color: colors.textMuted, fontSize: 9, lineHeight: 14, marginTop: 4 },
   favoriteHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 24, marginBottom: 12 },
   sectionTitle: { color: colors.text, fontSize: 19, fontWeight: '900' },
   sectionSub: { color: colors.textMuted, fontSize: 10, marginTop: 3 },
@@ -159,7 +173,7 @@ const styles = StyleSheet.create({
   settingSub: { color: colors.textMuted, fontSize: 9, marginTop: 3 },
   versionCard: { marginTop: 20, backgroundColor: colors.surfaceAlt, borderRadius: radii.large, padding: 15, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderColor: colors.border },
   versionBrand: { color: colors.text, fontSize: 13, fontWeight: '900' },
-  versionText: { color: colors.textMuted, fontSize: 9, marginTop: 4 },
+  versionText: { color: colors.textMuted, fontSize: 8, marginTop: 4 },
   demoPill: { backgroundColor: 'rgba(50,230,161,0.12)', borderWidth: 1, borderColor: 'rgba(50,230,161,0.28)', borderRadius: radii.pill, paddingHorizontal: 10, paddingVertical: 6 },
   demoText: { color: colors.primary, fontSize: 9, fontWeight: '900', letterSpacing: 1 },
 });
