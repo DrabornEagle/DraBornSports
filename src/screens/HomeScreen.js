@@ -128,7 +128,7 @@ export default function HomeScreen({ selectedSport, onSportChange, appMatches, o
             <QuickAction icon="radio" label="Canlı" color={colors.live} onPress={onGoMatches} delay={180} />
             <QuickAction icon="heart" label="Favoriler" color={colors.primary} onPress={onFavoriteFilter} delay={220} />
             <QuickAction icon="trophy" label="Puan Durumu" color={colors.accent} onPress={onGoLeagues} delay={260} />
-            <QuickAction icon="newspaper" label="Son Haberler" color={colors.purple} on@ress={onGoNews} delay={300} />
+            <QuickAction icon="newspaper" label="Son Haberler" color={colors.purple} onPress={onGoNews} delay={300} />
           </View>
 
           <FadeInView delay={340}>
