@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: colors.border,
     flexDirection: 'row',
-    justifyContent: 'space-between",
+    justifyContent: 'space-between',
     alignItems: 'center',
     gap: 10,
   },
